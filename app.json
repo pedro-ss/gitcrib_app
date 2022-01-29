@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "gitcrib_app",
+    "slug": "gitcrib_app",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "gitcrib_app"
+}
