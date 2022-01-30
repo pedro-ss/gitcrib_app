@@ -1,14 +1,14 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import  Login from './app/screens/Login';
+import { StyleSheet, View } from 'react-native';
+import  ListContributor from './app/screens/contributors/Contributor';
 
 
 export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />  
-      <Login />
+      <ListContributor />
     </View>
   );
 }
@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 10
   },
 });

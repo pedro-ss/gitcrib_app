@@ -40,31 +40,22 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       paddingTop: 10,
       flexDirection: 'row',
-      flexGrow: 'auto',
       justifyContent: 'center',
       fontFamily: 'Roboto'
     },
     newLoginButton: {
       position: 'absolute',
-      width: '174px',
-      left: '87px',
-      top: '384px',
-      background: '#1D075E',
-      borderRadius: '7px',
+      width: 174,
+      left: 87,
+      top: 384,
+      borderRadius: 7,
     },
     registerButtons: {
       alignItems: 'center',
       paddingTop: 10,
       flexDirection: 'row',
       justifyContent: 'center',
-    },
-    newRegisterButtons: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'left',
-      background: '#1D075E',
-      borderRadius: '7px'
-    },
+    }
   });
 
   export default styles;
