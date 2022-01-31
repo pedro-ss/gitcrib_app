@@ -13,16 +13,16 @@ const Stack = createStackNavigator();
 export default function Routes() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={Login} options={({ headerTitle: 'Gitcrib'})}/>
-        <Stack.Screen name="Cadastro" component={RegisterScreen} 
-            options={({ headerTitle: 'Gitcrib'})}/>
-        <Stack.Screen name="ListarContributors" component={ListContributors}
-            options={({ headerTitle: 'Contribuidores'})}/>
-        <Stack.Screen name="ListarProjetos" component={Listprojects}
-            options={({ headerTitle: 'Projetos'})}/>
-        <Stack.Screen name="ListTasks" component={ListTaks}
-            options={({ headerTitle: 'Tasks'})}/>
+      <Stack.Navigator
+         screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Cadastro" component={RegisterScreen} />
+        <Stack.Screen name="ListarContributors" component={ListContributors} />
+        <Stack.Screen name="ListarProjetos" component={Listprojects} />
+        <Stack.Screen name="ListTasks" component={ListTaks} />
       </Stack.Navigator>
     </NavigationContainer>
   );
