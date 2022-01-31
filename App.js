@@ -1,14 +1,14 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
-import  ListContributor from './app/screens/contributors/Contributor';
+import Routes from './navigation/Routes';
 
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />  
-      <ListContributor />
+      <StatusBar style="auto" /> 
+      <Routes /> 
     </View>
   );
 }

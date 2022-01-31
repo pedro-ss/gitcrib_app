@@ -1,37 +1,49 @@
-import * as React from 'react';
+import React from 'react';
 import { Text, View, Button, StyleSheet, TextInput } from 'react-native';
+import { RadioButton } from 'react-native-paper';
 
 export default function App() {
+  const [ checked,setChecked ] = React.useState('contribuidor');
+  const [ email, setEmail ] = React.useState(null);
+  const [ senha,setSenha ] = React.useState(null);
+  const [ username,setUsername ] = React.useState(null);
+
   return (
     <View >
       <View style={styles.container}>
-        <View style={{ width: '45%', paddingRight: 5, paddingTop: 15 }}>
-          <Button title="Contribuidor" accessibilityLabel="Contribuidor" />
+        <View style={{ width: '45%', paddingTop: 15, flexDirection:'row' }}>
+          <RadioButton
+            value="contribuidor"
+            status={checked === 'contribuidor' ? 'checked' : 'unchecked'}
+            onPress={() => setChecked("contribuidor")}
+          />
+          <Text>Contribuidor</Text>
         </View>
-        <View style={{ width: '45%', paddingLeft: 5, paddingTop: 15 }}>
-          <Button title="Fundador" accessibilityLabel="Fundador" />
+        <View style={{ width: '45%', paddingTop: 15, flexDirection:'row'  }}>
+          <RadioButton
+            value="fundador"
+            status={checked === 'fundador' ? 'checked' : 'unchecked'}
+            onPress={() => setChecked("fundador")}
+          />
+          <Text>Fundador</Text>
         </View>
       </View>
       <View style={styles.containerSecond}>
         <Text style={styles.basicText}>
           Email
         </Text>
-        <TextInput style={styles.basicInput} />
+        <TextInput style={styles.basicInput} value={email} onChangeText={setEmail} />
         <Text style={styles.basicText}>
           Senha
         </Text>
-        <TextInput style={styles.basicInput} />
-        <Text style={styles.basicText}>
-          Confirmar Senha
-        </Text>
-        <TextInput style={styles.basicInput} />
+        <TextInput style={styles.basicInput} value={senha} onChangeText={setSenha} />
         <Text style={styles.basicText}>
           Username do Github
         </Text>
-        <TextInput style={styles.basicInput} />
+        <TextInput style={styles.basicInput} value={username} onChangeText={setUsername} />
       </View>
       <View style={styles.registerButtons}>
-        <Button title="Cadastrar" accessibilityLabel="Cadastrar" />
+        <Button title="Cadastrar" accessibilityLabel="Cadastrar" onPress={() => console.log(email,senha,username) } />
       </View>
     </View>
   );

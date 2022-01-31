@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View, Button, StyleSheet, TextInput } from 'react-native';
 
-export default function App() {
+export default function App({ navigation }) {
   return (
     <View style={styles.momContainer}>
       <View style={styles.container}>
@@ -16,10 +16,10 @@ export default function App() {
       </View>
       <View style={styles.containerSecond}>
         <View style={{width:'45%', paddingTop: 15}}>
-              <Button title="Login" accessibilityLabel="Login"/>
+              <Button title="Login" accessibilityLabel="Login" onPress={()=>{ console.log("fazer requisição para o login") }} />
         </View>
         <View style={{width:'45%', paddingTop: 15}}>
-              <Button title="Cadastre-se" accessibilityLabel="Cadastre-se" />
+              <Button title="Cadastre-se" accessibilityLabel="Cadastre-se" onPress={() => { navigation.navigate('Cadastro') }}/>
         </View>
       </View>  
   </View>
