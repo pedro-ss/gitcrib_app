@@ -2,13 +2,38 @@ import React from 'react';
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
 import { RadioButton } from 'react-native-paper';
+import { gitCribAPI } from '../../integration/BaseApi';
 
 export default function App({ navigation }) {
-  
+
   const [email, setEmail] = React.useState(null);
-  const [senha, setSenha] = React.useState(null);
-  const [username, setUsername] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
+  const [userName, setUsername] = React.useState(null);
   const [checked, setChecked] = React.useState('contributor');
+
+  // const onSubmitFormHandler = async (event) => {
+  //   try {
+      
+  //     const response = await gitCribAPI.post('/user', {
+  //       userName: userName,
+  //       userType: checked,
+  //       email: email,
+  //       password: password
+  //     });
+  //     console.log(response)
+  //     if (response.status != 201) {
+  //       setEmail('');
+  //       setPassword('');
+  //       setUsername('');
+  //       navigation.navigate('ListarProjetos',{ id:response.body.id });
+  //     } else {
+  //       throw new Error("An error has occurred");
+  //     }
+
+  //   } catch (error) {
+  //     console.log("Error ")
+  //   }
+  // }
 
   return (
     <View >
@@ -20,11 +45,11 @@ export default function App({ navigation }) {
         <Text style={styles.basicText}>
           Senha
         </Text>
-        <TextInput style={styles.basicInput} value={senha} onChangeText={setSenha} secureTextEntry={true} placeholder="Senha" />
+        <TextInput style={styles.basicInput} value={password} onChangeText={setPassword} secureTextEntry={true} placeholder="Senha" />
         <Text style={styles.basicText}>
           Username do Github
         </Text>
-        <TextInput style={styles.basicInput} value={username} onChangeText={setUsername} placeholder="Username" />
+        <TextInput style={styles.basicInput} value={userName} onChangeText={setUsername} placeholder="Username" />
       </View>
       <View style={styles.container}>
         <RadioButton

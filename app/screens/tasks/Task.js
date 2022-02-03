@@ -1,28 +1,39 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-// import { useNavigation } from '@react-navigation/native';
+import { Text, View, TouchableHighlight, StyleSheet } from 'react-native';
+import { ListItem } from "react-native-elements";
 
 
-//<TouchableOpacity onPress={() => navigation.navigate('ViewTask', {id: Task.id})}>
-
-export default function Task({ task }) {
-    // const navigation = useNavigation();
+export default function Project({ task, navigation }) {
     return (
-        <View style={styles.containerList}>
-            <TouchableOpacity>
-                <View style={styles.taskListHeader}>
-                    <Text style={styles.taskListName}>{Task.name}</Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={{ flexDirection: 'column', width: 100 }}>
-                        <Text style={styles.taskListText}>{Task.description}</Text>
-                    </View>
-                    <View style={{ flexDirection: 'column' }}>
-                        <Text style={styles.taskListText}>{Task.status}</Text>
-                    </View>
-                </View>
-            </TouchableOpacity>
-        </View>
+        <TouchableOpacity>
+            <View style={styles.containerList}>
+                <ListItem
+                    Component={TouchableHighlight}
+                    containerStyle={{}}
+                    disabledStyle={{ opacity: 0.5 }}
+                    onPress={() => navigation.navigate('Viewtask', { id: task.id })}
+                    pad={20}
+                >
+                    <ListItem.Content>
+                        <ListItem.Title>
+                            <Text>task.name</Text>
+                        </ListItem.Title>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column' }}>
+                                <ListItem.Subtitle>
+                                    <Text>task.description</Text>
+                                </ListItem.Subtitle>
+                            </View>
+                            <View style={{ flexDirection: 'column', paddingLeft: '10%' }}>
+                                <ListItem.Subtitle>
+                                    <Text>task.status</Text>
+                                </ListItem.Subtitle>
+                            </View>
+                        </View>
+                    </ListItem.Content>
+                </ListItem>
+            </View>
+        </TouchableOpacity>
     );
 }
 
@@ -30,18 +41,17 @@ const styles = StyleSheet.create({
     containerList: {
         paddingTop: '20%'
     },
-    taskListHeader: {
+    projectListHeader: {
         flexDirection: 'row',
         backgroundColor: '#1D075E',
         borderColor: '#1d075E',
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8
     },
-    taskListName: {
+    projectListName: {
         color: 'white'
     },
-    taskListText: {
+    projectListText: {
         color: '#1d075E'
     }
-
 });

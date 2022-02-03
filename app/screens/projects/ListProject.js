@@ -1,17 +1,16 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
 import Project from './Project';
- 
-export default function Listagem() {
+import { gitCribAPI } from '../../../integration/BaseApi';
+import { Header } from 'react-native-elements';
+
+export default function Listagem({ route, navigation }) {
   
+    const { founderId } = route.params;
     let projects = [] 
     
-    const listprojects = [ 
-        {"name":"CRM", "description":"Projeto em Angular", "status":"em andamento" },
-        {"name":"Springboot", "description":"Projeto em Java", "status":"em andamento"},
-        {"name":"Mayhem", "description":"Projeto em Python", "status":"em andamento"}
-    ];
-
+    const listprojects = gitCribAPI.get("/project/founder-projects/"+founderId);
+         
     listprojects.forEach(projectItem => {
       projects.push(
         <Project project={projectItem}/>
@@ -20,6 +19,17 @@ export default function Listagem() {
 
   return (
     <View >
+        <Header
+          backgroundColor="#1D075E"
+          barStyle="default"
+          centerComponent={{
+            text: "PROJETOS",
+            style: { color: "#ffffff" }
+          }}
+          centerContainerStyle={{}}
+          containerStyle={{ width: 350 }}
+          placement="center"
+        />
         <ScrollView >
           {projects}
         </ScrollView>
