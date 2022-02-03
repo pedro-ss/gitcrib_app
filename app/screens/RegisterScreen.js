@@ -11,29 +11,29 @@ export default function App({ navigation }) {
   const [userName, setUsername] = React.useState(null);
   const [checked, setChecked] = React.useState('contributor');
 
-  // const onSubmitFormHandler = async (event) => {
-  //   try {
+  const onSubmitFormHandler = async (event) => {
+    try {
       
-  //     const response = await gitCribAPI.post('/user', {
-  //       userName: userName,
-  //       userType: checked,
-  //       email: email,
-  //       password: password
-  //     });
-  //     console.log(response)
-  //     if (response.status != 201) {
-  //       setEmail('');
-  //       setPassword('');
-  //       setUsername('');
-  //       navigation.navigate('ListarProjetos',{ id:response.body.id });
-  //     } else {
-  //       throw new Error("An error has occurred");
-  //     }
+      const response = await gitCribAPI.post('/user', {
+        userName: userName,
+        userType: checked,
+        email: email,
+        password: password
+      });
+      console.log(response)
+      if (response.status != 201) {
+        setEmail('');
+        setPassword('');
+        setUsername('');
+        navigation.navigate('ListarProjetos',{ founderId:response.body.id });
+      } else {
+        throw new Error("An error has occurred");
+      }
 
-  //   } catch (error) {
-  //     console.log("Error ")
-  //   }
-  // }
+    } catch (error) {
+      console.log("Error ")
+    }
+  }
 
   return (
     <View >
@@ -73,7 +73,7 @@ export default function App({ navigation }) {
         <Button
           raised
           buttonStyle={styles.basicPressableUserRegister}
-          onPress={() => navigation.navigate('ListarProjetos')}
+          onPress={onSubmitFormHandler}
           textStyle={styles.buttonTextRegister}
           title={`Cadastrar`}
         />

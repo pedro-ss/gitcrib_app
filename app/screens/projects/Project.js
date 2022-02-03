@@ -3,37 +3,34 @@ import { Text, View, TouchableHighlight, StyleSheet } from 'react-native';
 import { ListItem } from "react-native-elements";
 
 
-export default function Project() {
+export default function Project({ project }) {
     return (
-        <View >
-            {/* <TouchableOpacity style={styles.containerList}>
+        <View style={styles.containerList}>
                 <ListItem
                     Component={TouchableHighlight}
                     containerStyle={{}}
                     disabledStyle={{ opacity: 0.5 }}
-                    onPress={() => navigation.navigate('ListTasks', { id: project.id })}
+                    onPress={() => console.log(project.id)}
                     pad={20}
                 >
                     <ListItem.Content>
                         <ListItem.Title>
-                            <Text>project.name</Text>
+                            <Text>{project.name}</Text>
                         </ListItem.Title>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'column' }}>
                                 <ListItem.Subtitle>
-                                    <Text>project.description</Text>
+                                    <Text>{project.description}</Text>
                                 </ListItem.Subtitle>
                             </View>
                             <View style={{ flexDirection: 'column', paddingLeft: '10%' }}>
                                 <ListItem.Subtitle>
-                                    <Text>project.status</Text>
+                                    <Text>{project.status}</Text>
                                 </ListItem.Subtitle>
                             </View>
                         </View>
                     </ListItem.Content>
                 </ListItem>
-            </TouchableOpacity> */}
-            <Text>Porra</Text>
         </View>
     );
 }

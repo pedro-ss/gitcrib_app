@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
+import Constants from 'expo-constants';
 
 export default function App({ navigation }) {
   return (
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
   momContainer: {
     flexDirection: 'column',
     paddingTop: 100,
+    paddingTop: Constants.statusBarHeight,
   },
   container: {
     alignItems: 'center',
