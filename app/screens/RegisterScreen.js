@@ -2,13 +2,43 @@ import React from 'react';
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
 import { RadioButton } from 'react-native-paper';
+import axios from 'axios';
+const baseUrl = 'http://localhost:8081';
+
 
 export default function App({ navigation }) {
-  
+
   const [email, setEmail] = React.useState(null);
-  const [senha, setSenha] = React.useState(null);
-  const [username, setUsername] = React.useState(null);
-  const [checked, setChecked] = React.useState('contributor');
+  const [password, setPassword] = React.useState(null);
+  const [userName, setUsername] = React.useState(null);
+  const [checked, setChecked] = React.useState('Contributor');
+
+  const onSubmitFormHandler = async (event) => {
+      
+      console.log(email, userName, password, checked);
+      
+      axios.post(`${baseUrl}/user`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        userName: userName,
+        userType: checked,
+        email: email,
+        password: password
+      }).then((response) => {
+        console.log(response);
+        if(response.status==201){
+          setChecked('Contributor');
+          setEmail('')
+          setPassword('')
+          setUsername('')
+          navigation.navigate('Login')
+        }
+      }).catch((error) => {
+        console.log(error)
+      });
+  }
 
   return (
     <View >
@@ -20,25 +50,25 @@ export default function App({ navigation }) {
         <Text style={styles.basicText}>
           Senha
         </Text>
-        <TextInput style={styles.basicInput} value={senha} onChangeText={setSenha} secureTextEntry={true} placeholder="Senha" />
+        <TextInput style={styles.basicInput} value={password} onChangeText={setPassword} secureTextEntry={true} placeholder="Senha" />
         <Text style={styles.basicText}>
           Username do Github
         </Text>
-        <TextInput style={styles.basicInput} value={username} onChangeText={setUsername} placeholder="Username" />
+        <TextInput style={styles.basicInput} value={userName} onChangeText={setUsername} placeholder="Username" />
       </View>
       <View style={styles.container}>
         <RadioButton
-          value="contributor"
-          status={checked === 'contributor' ? 'checked' : 'unchecked'}
-          onPress={() => setChecked('contributor')}
+          value="Contribuidor"
+          status={checked === 'Contributor' ? 'checked' : 'unchecked'}
+          onPress={() => setChecked('Contributor')}
         />
         <Text style={styles.userTypeText}>
           Contribuidor
         </Text>
         <RadioButton
-          value="founder"
-          status={checked === 'founder' ? 'checked' : 'unchecked'}
-          onPress={() => setChecked('founder')}
+          value="Fundador"
+          status={checked === 'Founder' ? 'checked' : 'unchecked'}
+          onPress={() => setChecked('Founder')}
         />
         <Text style={styles.userTypeText}>
           Fundador
@@ -48,7 +78,7 @@ export default function App({ navigation }) {
         <Button
           raised
           buttonStyle={styles.basicPressableUserRegister}
-          onPress={() => navigation.navigate('ListarProjetos')}
+          onPress={onSubmitFormHandler}
           textStyle={styles.buttonTextRegister}
           title={`Cadastrar`}
         />

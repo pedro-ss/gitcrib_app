@@ -1,26 +1,50 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
+import Constants from 'expo-constants';
+import axios from 'axios';
+const baseUrl = 'http://localhost:8081';
+
 
 export default function App({ navigation }) {
+  const [email, setEmail] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
+
+  const onSubmitFormHandler = () => {
+    axios.post(`${baseUrl}/login`,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      email: email,
+      password: password
+    }).then((response) => {
+      if(response.status==200){
+        navigation.navigate('ListarProjetos', response.data);
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+  
   return (
     <View style={styles.momContainer}>
       <View style={styles.container}>
         <Text style={styles.basicText}>
           Email
         </Text>
-        <TextInput style={styles.basicInput} placeholder="Email" />
+        <TextInput style={styles.basicInput} value={email} placeholder="Email" onChangeText={setEmail}/>
         <Text style={styles.basicText}>
           Senha
         </Text>
-        <TextInput style={styles.basicInput} placeholder="Senha" secureTextEntry={true} />
+        <TextInput style={styles.basicInput} value={password} placeholder="Senha" secureTextEntry={true} onChangeText={setPassword}/>
       </View>
       <View style={styles.containerSecond}>
         <View style={styles.basicButtonsContainer}>
           <Button
             buttonStyle={styles.basicButtonRegister}
             titleStyle={styles.buttonText}
-            onPress={() => { navigation.navigate('ListTasks') }}
+            onPress={ onSubmitFormHandler }
             title={'Login'}
           />
         </View>
@@ -42,6 +66,7 @@ const styles = StyleSheet.create({
   momContainer: {
     flexDirection: 'column',
     paddingTop: 100,
+    paddingTop: Constants.statusBarHeight,
   },
   container: {
     alignItems: 'center',

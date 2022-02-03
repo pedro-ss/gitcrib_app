@@ -1,28 +1,40 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
 import Task from './Task';
- 
-export default function Listagem() {
-  
-    let tasks = [] 
-    
-    const listtasks = [ 
-        {"name":"Implementar Create", "description":"implementar create em projeto", "status":"em andamento" },
-        {"name":"Implementar Delete", "description":"implementar delete em projeto", "status":"em andamento"},
-        {"name":"Implementar Search", "description":"implementar search em projeto", "status":"em andamento"}
-    ];
+import { gitCribAPI } from '../../../integration/BaseApi';
 
-    listtasks.forEach(taskItem => {
-      tasks.push(
-        <Task task={taskItem}/>
-        )
-    })
+export default function Listagem( route, navigation ) {
+
+  const projectId = route.params;
+
+  let tasks = []
+  const listtasks = [];
+
+  if(projectId != undefined) {
+    listtasks = gitCribAPI.get("/task/projects-tasks/" + projectId);
+  }
+
+  listtasks.forEach(taskItem => {
+    tasks.push(
+      <Task task={taskItem} />
+    )
+  })
 
   return (
     <View >
-        <ScrollView >
-          {tasks}
-        </ScrollView>
+      <Header
+        backgroundColor="#1D075E"
+        barStyle="default"
+        centerComponent={{
+          text: "PROJETOS",
+          style: { color: "#ffffff" }
+        }}
+        containerStyle={{ width: 'auto' }}
+        placement="center"
+      />
+      <ScrollView >
+        {tasks}
+      </ScrollView>
     </View>
   );
 }
