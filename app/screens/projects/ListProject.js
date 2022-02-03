@@ -4,21 +4,20 @@ import Project from './Project';
 import { gitCribAPI } from '../../../integration/BaseApi';
 import { Header } from 'react-native-elements';
 
-export default function Listagem(route, navigation) {
-  const  founderId  = route.params;
+export default function Listagem({ navigation }) {
   
   let projects = [];
-  const listprojects = [{"id":"1","name":"Angular","description":"Projeto JS","status":"ativo"}];
+  let listprojects = [];
   
-  if(founderId != undefined) {
-    listprojects = gitCribAPI.get("/project/founder-projects/"+founderId) ;
+  listprojects = gitCribAPI.get("/project//list-projects") ;
+  
+  if(listprojects.length > 0) {
+    listprojects.forEach(projectItem => {
+      projects.push(
+        <Project project={projectItem}/>
+        )
+    });
   }
-  
-  listprojects.forEach(projectItem => {
-    projects.push(
-      <Project project={projectItem}/>
-      )
-  });
   
   return (
     <View >

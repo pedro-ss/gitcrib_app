@@ -2,37 +2,42 @@ import React from 'react';
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
 import { RadioButton } from 'react-native-paper';
-import { gitCribAPI } from '../../integration/BaseApi';
+import axios from 'axios';
+const baseUrl = 'http://localhost:8081';
+
 
 export default function App({ navigation }) {
 
   const [email, setEmail] = React.useState(null);
   const [password, setPassword] = React.useState(null);
   const [userName, setUsername] = React.useState(null);
-  const [checked, setChecked] = React.useState('contributor');
+  const [checked, setChecked] = React.useState('Contributor');
 
   const onSubmitFormHandler = async (event) => {
-    try {
       
-      const response = await gitCribAPI.post('/user', {
+      console.log(email, userName, password, checked);
+      
+      axios.post(`${baseUrl}/user`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
         userName: userName,
         userType: checked,
         email: email,
         password: password
+      }).then((response) => {
+        console.log(response);
+        if(response.status==201){
+          setChecked('Contributor');
+          setEmail('')
+          setPassword('')
+          setUsername('')
+          navigation.navigate('Login')
+        }
+      }).catch((error) => {
+        console.log(error)
       });
-      console.log(response)
-      if (response.status != 201) {
-        setEmail('');
-        setPassword('');
-        setUsername('');
-        navigation.navigate('ListarProjetos',{ founderId:response.body.id });
-      } else {
-        throw new Error("An error has occurred");
-      }
-
-    } catch (error) {
-      console.log("Error ")
-    }
   }
 
   return (
@@ -53,17 +58,17 @@ export default function App({ navigation }) {
       </View>
       <View style={styles.container}>
         <RadioButton
-          value="contributor"
-          status={checked === 'contributor' ? 'checked' : 'unchecked'}
-          onPress={() => setChecked('contributor')}
+          value="Contribuidor"
+          status={checked === 'Contributor' ? 'checked' : 'unchecked'}
+          onPress={() => setChecked('Contributor')}
         />
         <Text style={styles.userTypeText}>
           Contribuidor
         </Text>
         <RadioButton
-          value="founder"
-          status={checked === 'founder' ? 'checked' : 'unchecked'}
-          onPress={() => setChecked('founder')}
+          value="Fundador"
+          status={checked === 'Founder' ? 'checked' : 'unchecked'}
+          onPress={() => setChecked('Founder')}
         />
         <Text style={styles.userTypeText}>
           Fundador
