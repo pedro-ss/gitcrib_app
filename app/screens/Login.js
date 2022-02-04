@@ -20,7 +20,7 @@ export default function App({ navigation }) {
       password: password
     }).then((response) => {
       if(response.status==200){
-        navigation.navigate('ListarProjetos', response.data);
+        navigation.navigate('ListarProjetos');
       }
     }).catch((error) => {
       console.log(error);
