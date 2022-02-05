@@ -1,40 +1,70 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import Project from './Project';
-import { gitCribAPI } from '../../../integration/BaseApi';
 import { Header } from 'react-native-elements';
+import axios from 'axios';
+import { PlusOutlined, MenuOutlined } from '@ant-design/icons';
+const baseUrl = 'http://localhost:8081';
 
 export default function Listagem({ navigation }) {
-
-  let projects = [];
+  const [projects, setProjects] = React.useState([]);
   let listprojects = [];
 
-  gitCribAPI.get("/project/list-projects")
-    .then((response) => {
-      listprojects = response.data
-      consoler.log(response);
-      if (listprojects.length > 0) {
-        listprojects.forEach(projectItem => {
-          projects.push(
-            <Project project={projectItem} />
-          )
-        });
-      }
-    }).catch((error) => {
-      console.log(error);
-    });
+  const lookForProjects = () => {
+    axios.get(`${baseUrl}/project/list-projects`)
+      .then((response) => {
+        console.log(`Resultado: ${response.data}`);
+        if (response.status == 200) {
+          response.data.forEach(projectItem => {
+            listprojects.push(
+              <Project project={projectItem} navigation={navigation}/>
+            );
+          });
+          setProjects(listprojects);
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+  }
 
-  console.log(listprojects);
+  React.useEffect(() => {
+    lookForProjects();
+  }, []);
 
 
+  console.log(`Array projects: ${projects}`);
   return (
     <View >
       <Header
         backgroundColor="#1D075E"
         barStyle="default"
+        leftComponent={
+          <View style={styles.headerRight}>
+            <TouchableOpacity
+              style={{ marginLeft: 10 }}
+              onPress={() => console.log("pressed")}
+            >
+              <MenuOutlined 
+                style={{color: '#ffffff', fontSize: 21}}
+              />
+            </TouchableOpacity>
+          </View>
+        }
+        rightComponent={
+          <View style={styles.headerRight}>
+            <TouchableOpacity
+              style={{ marginLeft: 10 }}
+              onPress={() => console.log("pressed")}
+            >
+              <PlusOutlined 
+                style={{color: '#ffffff', fontSize: 21}}
+              />
+            </TouchableOpacity>
+          </View>
+        }
         centerComponent={{
           text: "PROJETOS",
-          style: { color: "#ffffff" }
+          style: styles.headingStyle
         }}
         containerStyle={{ width: 'auto' }}
         placement="center"
@@ -45,3 +75,12 @@ export default function Listagem({ navigation }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  headingStyle: {
+    paddingTop: '3%',
+    color: "#ffffff",
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+})

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, TextInput } from 'react-native';
+import { Text, View, StyleSheet, TextInput, Alert } from 'react-native';
 import { Button } from 'react-native-elements';
 import Constants from 'expo-constants';
 import axios from 'axios';
@@ -24,6 +24,7 @@ export default function App({ navigation }) {
       }
     }).catch((error) => {
       console.log(error);
+      Alert.alert("email ou senha incorretos");
     })
   }
   
