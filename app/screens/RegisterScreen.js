@@ -16,6 +16,9 @@ export default function App({ navigation }) {
   const onSubmitFormHandler = async (event) => {
       
       console.log(email, userName, password, checked);
+      if (email == null || userName == null || password == null){
+        alert("Erro ao cadastrar, verifique os campos preenchidos.");
+      }
       
       axios.post(`${baseUrl}/user`, {
         headers: {
@@ -36,7 +39,8 @@ export default function App({ navigation }) {
           navigation.navigate('Login')
         }
       }).catch((error) => {
-        console.log(error)
+        console.log(error);
+        alert("Erro ao cadastrar, verifique os campos preenchidos.");
       });
   }
 

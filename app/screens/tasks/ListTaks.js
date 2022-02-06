@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import Task from './Task';
 import { Header } from 'react-native-elements';
-import { PlusOutlined, HomeOutlined } from '@ant-design/icons';
+import { PlusOutlined, RollbackOutlined } from '@ant-design/icons';
 import axios from 'axios';
 const baseUrl = 'http://localhost:8081';
 
@@ -10,7 +10,7 @@ export default function Listagem({ route, navigation }) {
   const [tasks, setTasks] = React.useState([]);
   const projectId = route.params.projectId;
   const userSystem = route.params.userSystem;
-
+  console.log("Usuário: "+JSON.stringify(userSystem),"Id do projeto: "+projectId);
   let listtasks = [];
 
   const lookForTasks = () => {
@@ -46,9 +46,9 @@ export default function Listagem({ route, navigation }) {
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => console.log("ir para home")}
+              onPress={() => navigation.goBack(null) }
             >
-              <HomeOutlined
+              <RollbackOutlined
                 style={{ color: '#ffffff', fontSize: 21 }}
               />
             </TouchableOpacity>
@@ -58,7 +58,7 @@ export default function Listagem({ route, navigation }) {
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => console.log("ir para a tela de criar task")}
+              onPress={() => navigation.navigate('ManageTask', {userSystem:userSystem, screeType: 'CREATE', projectId: projectId})}
             >
               <PlusOutlined
                 style={{ color: '#ffffff', fontSize: 21 }}

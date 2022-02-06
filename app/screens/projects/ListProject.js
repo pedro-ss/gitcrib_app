@@ -3,16 +3,15 @@ import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import Project from './Project';
 import { Header } from 'react-native-elements';
 import axios from 'axios';
-import { PlusOutlined, MenuOutlined } from '@ant-design/icons';
+import { PlusOutlined, HomeOutlined } from '@ant-design/icons';
 const baseUrl = 'http://localhost:8081';
 
-export default function Listagem({ route, navigation }) {
-  
+export default function ListProject({ route, navigation }) {
+
   const [projects, setProjects] = React.useState([]);
-  console.log(JSON.stringify(route.params));
   const userSystem = route.params;
   let listprojects = [];
-  
+  console.log("Usuário atual: "+JSON.stringify(userSystem));
   const lookForProjects = () => {
     axios.get(`${baseUrl}/project/list-projects`)
       .then((response) => {
@@ -20,7 +19,24 @@ export default function Listagem({ route, navigation }) {
         if (response.status == 200) {
           response.data.forEach(projectItem => {
             listprojects.push(
-              <Project project={projectItem} userSystem={userSystem} navigation={navigation}/>
+              <Project route={{params: {project: projectItem, userSystem: userSystem}}} navigation={navigation} />
+            );
+          });
+          setProjects(listprojects);
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const lookForFounderProjects = () => {
+    axios.get(`${baseUrl}/project/founder-projects/${userSystem.id}`)
+      .then((response) => {
+        console.log(`Resultado: ${response.data}`);
+        if (response.status == 200) {
+          response.data.forEach(projectItem => {
+            listprojects.push(
+              <Project route={{params: {project: projectItem, userSystem: userSystem}}} navigation={navigation} />
             );
           });
           setProjects(listprojects);
@@ -31,9 +47,16 @@ export default function Listagem({ route, navigation }) {
   }
 
   React.useEffect(() => {
-    lookForProjects();
+    if (userSystem.userType == 'Contributor') {
+      lookForProjects();
+    } else {
+      lookForFounderProjects();
+    }
   }, []);
 
+  const gotoManageProject = () => {
+    navigation.navigate('ManageProject', { screenType: 'CREATE', userSystem: userSystem });
+  }
 
   console.log(`Array projects: ${projects}`);
   return (
@@ -45,26 +68,26 @@ export default function Listagem({ route, navigation }) {
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => console.log("pressed")}
+              onPress={ () => navigation.navigate('Login') }
             >
-              <MenuOutlined 
-                style={{color: '#ffffff', fontSize: 21}}
+              <HomeOutlined
+                style={{ color: '#ffffff', fontSize: 21 }}
               />
             </TouchableOpacity>
           </View>
         }
-        rightComponent={ userSystem.userType != 'Contributor' ? 
+        rightComponent={userSystem.userType != 'Contributor' ?
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => console.log("pressed")}
+              onPress={gotoManageProject}
             >
-              <PlusOutlined 
-                style={{color: '#ffffff', fontSize: 21}}
+              <PlusOutlined
+                style={{ color: '#ffffff', fontSize: 21 }}
               />
             </TouchableOpacity>
           </View>
-        : ''}
+          : ''}
         centerComponent={{
           text: "PROJETOS",
           style: styles.headingStyle

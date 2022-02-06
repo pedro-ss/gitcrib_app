@@ -1,14 +1,14 @@
 import React from 'react';
-import { Text, View, TouchableHighlight, StyleSheet, Modal, Alert } from 'react-native';
-import { ListItem, Button } from "react-native-elements";
+import { Text, View, TouchableHighlight, StyleSheet, Modal } from 'react-native';
+import { ListItem, Button, CheckBox } from "react-native-elements";
 import axios from 'axios';
 const baseUrl = 'http://localhost:8081';
 
 export default function Task({ task, userSystem, navigation }) {
     const [modalVisible, setModalVisible] = React.useState(false);
-    
-    const [taskId] = React.useState(task.taskId);
-    const [contributorId] = React.useState(userSystem.id);
+    const [taskEditDelete, setTaskEditDelete] = React.useState(false);
+    const [checkTask, setCheckTask] = React.useState(false);
+    console.log(`Task atual: ${JSON.stringify(task)} e usuário: ${JSON.stringify(userSystem)}`);
 
     const registerActivity = () => {
         console.log(`cirou vinculo entre usuario de id: ${userSystem.id} e task: ${task.taskId}`);
@@ -17,21 +17,31 @@ export default function Task({ task, userSystem, navigation }) {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            taskId: taskId,
-            contributorId: contributorId
+            taskId: task.taskId,
+            contributorId: userSystem.id
         }).then((response) => {
             console.log("Redirecionando para as tasks do contributor")
             console.log(response)
             navigation.navigate('Login');
         }).catch((error) => {
-                alert(`um erro ocorreu ao criar task ${error}`)
-            });
+            alert(`um erro ocorreu ao criar task ${error}`)
+        });
         setModalVisible(false);
     }
 
     const cancelActivity = () => {
         setModalVisible(false);
         console.log(`Cancelou atividade`);
+    }
+
+    const openOptionsTask = () => {
+        setCheckTask(true);
+        setTaskEditDelete(true);
+    }
+
+    const cancelEditTask = () => {
+        setCheckTask(false);
+        setTaskEditDelete(false);
     }
 
     return (
@@ -69,6 +79,42 @@ export default function Task({ task, userSystem, navigation }) {
                         </View>
                     </Modal>
                 </View>
+                <View style={styles.centeredView}>
+                    {userSystem.userType == 'Founder' ?
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={taskEditDelete}
+                        >
+                            <View style={styles.basicModalContainer}>
+                                <View style={styles.buttonModalStyle}>
+                                    <Button
+                                        buttonStyle={styles.modalButton}
+                                        titleStyle={styles.buttonText}
+                                        onPress={cancelEditTask}
+                                        title={'Cancelar'}
+                                    />
+                                </View>
+                                <View style={styles.buttonModalStyle}>
+                                    <Button
+                                        buttonStyle={styles.modalButton}
+                                        titleStyle={styles.buttonText}
+                                        onPress={() => console.log('deletou')}
+                                        title={'Deletar'}
+                                    />
+                                </View>
+                                <View style={styles.buttonModalStyle}>
+                                    <Button
+                                        buttonStyle={styles.modalButton}
+                                        titleStyle={styles.buttonText}
+                                        onPress={() => console.log('editou')}
+                                        title={'Editar'}
+                                    />
+                                </View>
+                            </View>
+                        </Modal>
+                        : ''}
+                </View>
                 <ListItem
                     key={task.taskId}
                     Component={TouchableHighlight}
@@ -76,6 +122,10 @@ export default function Task({ task, userSystem, navigation }) {
                     onPress={() => setModalVisible('true')}
                     pad={20}
                 >
+                    <CheckBox
+                        checked={checkTask}
+                        onPress={openOptionsTask}
+                    />
                     <ListItem.Content>
                         <ListItem.Title style={styles.taskListHeader}>
                             <Text>Task: {task.title}</Text>

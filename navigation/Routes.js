@@ -5,6 +5,8 @@ import ListContributors from '../app/screens/contributors/ListContributors';
 import Listprojects from '../app/screens/projects/ListProject';
 import ListTaks from '../app/screens/tasks/ListTaks';
 import RegisterScreen from '../app/screens/RegisterScreen'
+import ManageProject from '../app/screens/projects/ManageProject';
+import ManageTask from '../app/screens/tasks/ManageTask';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -23,6 +25,8 @@ export default function Routes() {
         <Stack.Screen name="ListarProjetos" component={Listprojects} />
         <Stack.Screen name="ListTasks" component={ListTaks} />
         <Stack.Screen name="ListarContributors" component={ListContributors} />
+        <Stack.Screen name="ManageProject" component={ManageProject} />
+        <Stack.Screen name="ManageTask" component={ManageTask} />
       </Stack.Navigator>
     </NavigationContainer>
   );

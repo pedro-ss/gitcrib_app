@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, TextInput, Alert } from 'react-native';
+import { Text, View, StyleSheet, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
 import Constants from 'expo-constants';
 import axios from 'axios';
@@ -19,15 +19,14 @@ export default function App({ navigation }) {
       email: email,
       password: password
     }).then((response) => {
-      if(response.data != undefined){
+      if(response.status != 500 && response.data != undefined){
         console.log(response.data);
         navigation.navigate('ListarProjetos', response.data);
       } else {
         alert("email ou senha incorretos");
       }
     }).catch((error) => {
-      console.log(error);
-      Alert.alert("email ou senha incorretos");
+      alert("email ou senha incorretos");
     })
   }
   
@@ -69,7 +68,6 @@ export default function App({ navigation }) {
 const styles = StyleSheet.create({
   momContainer: {
     flexDirection: 'column',
-    paddingTop: 100,
     paddingTop: Constants.statusBarHeight,
   },
   container: {
