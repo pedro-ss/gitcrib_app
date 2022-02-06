@@ -1,20 +1,31 @@
 import React from 'react';
-import { Text, View, TouchableHighlight, StyleSheet, Modal } from 'react-native';
+import { Text, View, TouchableHighlight, StyleSheet, Modal, Alert } from 'react-native';
 import { ListItem, Button } from "react-native-elements";
 import axios from 'axios';
 const baseUrl = 'http://localhost:8081';
 
-export default function Task({ route, navigation }) {
+export default function Task({ task, userSystem, navigation }) {
     const [modalVisible, setModalVisible] = React.useState(false);
-
-    console.log(JSON.stringify(route));
-
-    const task = { taskId: 1 }; //route.params.task; remover após testes
-    const userId = 1; //route.params.userId; remover após testes
+    
+    const [taskId] = React.useState(task.taskId);
+    const [contributorId] = React.useState(userSystem.id);
 
     const registerActivity = () => {
-        console.log(`cirou vinculo entre usuario de id: ${userId} e task: ${task.taskId}`);
-        // adicionar requisição que vincula task ao conttibuidor
+        console.log(`cirou vinculo entre usuario de id: ${userSystem.id} e task: ${task.taskId}`);
+        axios.post(`${baseUrl}/task/link-task-to-contributor`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            taskId: taskId,
+            contributorId: contributorId
+        }).then((response) => {
+            console.log("Redirecionando para as tasks do contributor")
+            console.log(response)
+            navigation.navigate('Login');
+        }).catch((error) => {
+                alert(`um erro ocorreu ao criar task ${error}`)
+            });
         setModalVisible(false);
     }
 
@@ -25,63 +36,69 @@ export default function Task({ route, navigation }) {
 
     return (
         <View style={styles.containerList}>
-            <View style={styles.centeredView}>
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
+            <View style={styles.containerList}>
+                <View style={styles.centeredView}>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                    >
+                        <View style={styles.basicModalContainer}>
+                            <Text style={styles.taskListHeader}>Deseja atuar nessa task?</Text>
+                        </View>
+                        <View style={styles.basicModalContainer}>
+                            <Text style={styles.taskListText}>{task.description}</Text>
+                        </View>
+                        <View style={styles.basicModalContainer}>
+                            <View style={styles.buttonModalStyle}>
+                                <Button
+                                    buttonStyle={styles.modalButton}
+                                    titleStyle={styles.buttonText}
+                                    onPress={cancelActivity}
+                                    title={'Cancelar'}
+                                />
+                            </View>
+                            <View style={styles.buttonModalStyle}>
+                                <Button
+                                    buttonStyle={styles.modalButton}
+                                    titleStyle={styles.buttonText}
+                                    onPress={registerActivity}
+                                    title={'Confirmar'}
+                                />
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+                <ListItem
+                    key={task.taskId}
+                    Component={TouchableHighlight}
+                    disabledStyle={{ opacity: 0.5 }}
+                    onPress={() => setModalVisible('true')}
+                    pad={20}
                 >
-                    <View style={styles.basicModalContainer}>
-                        <Text>Deseja atuar nessa task?</Text>
-                    </View>
-                    <View style={styles.basicModalContainer}>
-                        <View style={styles.buttonModalStyle}>
-                            <Button
-                                buttonStyle={styles.modalButton}
-                                titleStyle={styles.buttonText}
-                                onPress={cancelActivity}
-                                title={'Cancelar'}
-                            />
+                    <ListItem.Content>
+                        <ListItem.Title style={styles.taskListHeader}>
+                            <Text>Task: {task.title}</Text>
+                        </ListItem.Title>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column' }}>
+                                <ListItem.Subtitle style={styles.taskListHeader}>
+                                    <Text>Descrição: </Text>
+                                    <Text style={styles.taskListText}>{task.description}</Text>
+                                </ListItem.Subtitle>
+                            </View>
                         </View>
-                        <View style={styles.buttonModalStyle}>
-                            <Button
-                                buttonStyle={styles.modalButton}
-                                titleStyle={styles.buttonText}
-                                onPress={registerActivity}
-                                title={'Confirmar'}
-                            />
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column' }}>
+                                <ListItem.Subtitle style={styles.taskListHeader}>
+                                    <Text>Status: </Text>
+                                    <Text style={styles.taskListText}>{task.status}</Text>
+                                </ListItem.Subtitle>
+                            </View>
                         </View>
-                    </View>
-                </Modal>
+                    </ListItem.Content>
+                </ListItem>
             </View>
-            <ListItem
-                key={task.taskId}
-                Component={TouchableHighlight}
-                containerStyle={{}}
-                disabledStyle={{ opacity: 0.5 }}
-                onPress={() => setModalVisible('true')}
-                pad={20}
-            >
-                <ListItem.Content>
-                    <ListItem.Title style={styles.taskListHeader}>
-                        <Text>Task: {task.taskId}</Text>
-                    </ListItem.Title>
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ flexDirection: 'column' }}>
-                            <ListItem.Subtitle style={styles.taskListText}>
-                                <Text>Descrição: {task.description}</Text>
-                            </ListItem.Subtitle>
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ flexDirection: 'column' }}>
-                            <ListItem.Subtitle style={styles.taskListText}>
-                                <Text>Status: {task.taskStatus}</Text>
-                            </ListItem.Subtitle>
-                        </View>
-                    </View>
-                </ListItem.Content>
-            </ListItem>
         </View>
     );
 }

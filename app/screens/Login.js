@@ -19,8 +19,11 @@ export default function App({ navigation }) {
       email: email,
       password: password
     }).then((response) => {
-      if(response.status==200){
-        navigation.navigate('ListarProjetos');
+      if(response.data != undefined){
+        console.log(response.data);
+        navigation.navigate('ListarProjetos', response.data);
+      } else {
+        alert("email ou senha incorretos");
       }
     }).catch((error) => {
       console.log(error);

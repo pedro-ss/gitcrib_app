@@ -1,37 +1,41 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import Task from './Task';
-import { Header} from 'react-native-elements';
-import { PlusOutlined, MenuOutlined } from '@ant-design/icons';
+import { Header } from 'react-native-elements';
+import { PlusOutlined, HomeOutlined } from '@ant-design/icons';
 import axios from 'axios';
 const baseUrl = 'http://localhost:8081';
 
 export default function Listagem({ route, navigation }) {
   const [tasks, setTasks] = React.useState([]);
-  const projectId = 1;//route.params.projectId;
-  const userSysId = 1;//route.params.userSysId;
+  const projectId = route.params.projectId;
+  const userSystem = route.params.userSystem;
+
   let listtasks = [];
 
-  if(projectId != undefined) {
-    axios.get(`${baseUrl}/task/projects-tasks/${projectId}`).then((response) => {
-      if (response.status == 200) {
-        response.data.forEach( taskItem => {
-          listtasks.push(
-            <Task task={taskItem} userSysId={userSysId} navigation={navigation}/>
-          );
-        });
-        setTasks(listtasks);
+  const lookForTasks = () => {
+    if (projectId != undefined) {
+      axios.get(`${baseUrl}/task/projects-tasks/${projectId}`).then((response) => {
+        if (response.status == 200) {
+          console.log(` resposta: ${JSON.stringify(response.data)}`);
+          debugger;
+          response.data.forEach(taskItem => {
+            listtasks.push(
+              <Task task={taskItem} userSystem={userSystem} navigation={navigation} />
+            );
+          });
+          setTasks(listtasks);
         }
-    }).catch((error) => {
-      console.log(`ocorreu um erro ao listar as tasks ${error}`);
-    });
+      }).catch((error) => {
+        console.log(`ocorreu um erro ao listar as tasks ${error}`);
+      });
+    }
   }
 
-  // listtasks.forEach(taskItem => {
-  //   tasks.push(
-  //     <Task task={taskItem} />
-  //   )
-  // })
+  React.useEffect(() => {
+    lookForTasks();
+  }, []);
+
 
   return (
     <View >
@@ -42,26 +46,26 @@ export default function Listagem({ route, navigation }) {
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => console.log("pressed")}
+              onPress={() => console.log("ir para home")}
             >
-              <MenuOutlined 
-                style={{color: '#ffffff', fontSize: 21}}
+              <HomeOutlined
+                style={{ color: '#ffffff', fontSize: 21 }}
               />
             </TouchableOpacity>
           </View>
         }
-        rightComponent={
+        rightComponent={ userSystem.userType != 'Contributor' ? 
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => console.log("pressed")}
+              onPress={() => console.log("ir para a tela de criar task")}
             >
-              <PlusOutlined 
-                style={{color: '#ffffff', fontSize: 21}}
+              <PlusOutlined
+                style={{ color: '#ffffff', fontSize: 21 }}
               />
             </TouchableOpacity>
           </View>
-        }
+         : ''}
         centerComponent={{
           text: "TASKS",
           style: styles.headingStyle

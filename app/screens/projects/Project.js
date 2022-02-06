@@ -3,14 +3,15 @@ import { Text, View, TouchableHighlight, StyleSheet } from 'react-native';
 import { ListItem } from "react-native-elements";
 
 
-export default function Project({ project, navigation }) {
+export default function Project({ project, userSystem, navigation }) {
+    
     return (
         <View style={styles.containerList}>
             <ListItem
                 key={project.projectId}
                 Component={TouchableHighlight}
                 disabledStyle={{ opacity: 0.5 }}
-                onPress={() => navigation.navigate('ListTasks', {projectId: project.projectId})}
+                onPress={() => navigation.navigate('ListTasks', {projectId: project.projectId, userSystem: userSystem })}
                 pad={20}
             >
                 <ListItem.Content>

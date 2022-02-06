@@ -18,10 +18,10 @@ export default function Routes() {
           headerShown: false,
         }}
       >
-        <Stack.Screen name="ListTasks" component={ListTaks} />
-        <Stack.Screen name="ListarProjetos" component={Listprojects} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Cadastro" component={RegisterScreen} />
+        <Stack.Screen name="ListarProjetos" component={Listprojects} />
+        <Stack.Screen name="ListTasks" component={ListTaks} />
         <Stack.Screen name="ListarContributors" component={ListContributors} />
       </Stack.Navigator>
     </NavigationContainer>

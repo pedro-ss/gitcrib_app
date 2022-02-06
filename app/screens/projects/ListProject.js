@@ -6,10 +6,13 @@ import axios from 'axios';
 import { PlusOutlined, MenuOutlined } from '@ant-design/icons';
 const baseUrl = 'http://localhost:8081';
 
-export default function Listagem({ navigation }) {
+export default function Listagem({ route, navigation }) {
+  
   const [projects, setProjects] = React.useState([]);
+  console.log(JSON.stringify(route.params));
+  const userSystem = route.params;
   let listprojects = [];
-
+  
   const lookForProjects = () => {
     axios.get(`${baseUrl}/project/list-projects`)
       .then((response) => {
@@ -17,7 +20,7 @@ export default function Listagem({ navigation }) {
         if (response.status == 200) {
           response.data.forEach(projectItem => {
             listprojects.push(
-              <Project project={projectItem} navigation={navigation}/>
+              <Project project={projectItem} userSystem={userSystem} navigation={navigation}/>
             );
           });
           setProjects(listprojects);
@@ -50,7 +53,7 @@ export default function Listagem({ navigation }) {
             </TouchableOpacity>
           </View>
         }
-        rightComponent={
+        rightComponent={ userSystem.userType != 'Contributor' ? 
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
@@ -61,7 +64,7 @@ export default function Listagem({ navigation }) {
               />
             </TouchableOpacity>
           </View>
-        }
+        : ''}
         centerComponent={{
           text: "PROJETOS",
           style: styles.headingStyle
