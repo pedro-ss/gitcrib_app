@@ -47,8 +47,8 @@ export default function Task({ task, userSystem, navigation }) {
     const deleteTask = () => {
         axios.post(`${baseUrl}/task/delete-task`, {
             headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*'
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
             },
             taskId: task.taskId,
             title: task.title,
@@ -56,11 +56,11 @@ export default function Task({ task, userSystem, navigation }) {
             status: task.taskStatus,
             projectId: task.projectId,
             founderId: userSystem.id
-        }).then( (response) => {
+        }).then((response) => {
             console.log(response.status);
             alert("Task deletada com sucesso");
             navigation.goBack(null);
-        }).catch( (error) => {
+        }).catch((error) => {
             console.log(`Erro ao deletar a task: ${error}`);
             alert('Erro ao deletar a task.');
         });
@@ -69,7 +69,7 @@ export default function Task({ task, userSystem, navigation }) {
     const showEditTask = () => {
         setCheckTask(false);
         setTaskEditDelete(false);
-        navigation.navigate('ManageTask', { userSystem:userSystem, screenType:'UPDATE', projectId: task.projectId, task: task });
+        navigation.navigate('ManageTask', { userSystem: userSystem, screenType: 'UPDATE', projectId: task.projectId, task: task });
     }
     return (
         <View>
@@ -134,7 +134,7 @@ export default function Task({ task, userSystem, navigation }) {
                                     <Button
                                         buttonStyle={styles.modalButton}
                                         titleStyle={styles.buttonText}
-                                        onPress={ deleteTask }
+                                        onPress={deleteTask}
                                         title={'Deletar'}
                                     />
                                 </View>
@@ -142,7 +142,7 @@ export default function Task({ task, userSystem, navigation }) {
                                     <Button
                                         buttonStyle={styles.modalButton}
                                         titleStyle={styles.buttonText}
-                                        onPress={ showEditTask }
+                                        onPress={showEditTask}
                                         title={'Editar'}
                                     />
                                 </View>
@@ -157,10 +157,13 @@ export default function Task({ task, userSystem, navigation }) {
                     onPress={() => setModalVisible('true')}
                     pad={20}
                 >
-                    <CheckBox
-                        checked={checkTask}
-                        onPress={openOptionsTask}
-                    />
+                    { userSystem.userType == 'Founder' ?
+                        <CheckBox
+                            checked={checkTask}
+                            onPress={openOptionsTask}
+                        />
+                        : '' }
+
                     <ListItem.Content>
                         <ListItem.Title style={styles.taskListHeader}>
                             <Text>Task: {task.title}</Text>

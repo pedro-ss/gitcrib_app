@@ -9,18 +9,19 @@ const baseUrl = 'http://localhost:8081';
 
 export default function ManageProject({ route, navigation }) {
 
-    const [description, setDescription] = React.useState(null);
-    const [projectStatus, setProjectStatus] = React.useState('ACTIVE');
+    const project = route.params.project;
+    const [description, setDescription] = React.useState(project != null ? project.description : null);
+    const [projectStatus, setProjectStatus] = React.useState(project != null ? project.projectStatus : 'ACTIVE');
     const screenType = route.params.screenType;
     const userSystem = route.params.userSystem;
-
+    
     const createProject = () => {
-        console.log('Cadastrou');
         axios.post(`${baseUrl}/project/save-project`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
+            projectId: project.projectId,
             description: description,
             projectStatus: projectStatus,
             founderId: userSystem.id
@@ -38,8 +39,7 @@ export default function ManageProject({ route, navigation }) {
     }
 
     const updateProject = () => {
-        console.log('Atualizou');
-        axios.patch(`${baseUrl}/project/update-project`, {
+        axios.put(`${baseUrl}/project/update-project`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
@@ -67,7 +67,7 @@ export default function ManageProject({ route, navigation }) {
                     <View>
                         <TouchableOpacity
                             style={{ marginLeft: 10 }}
-                            onPress={ () => navigation.navigate('Menu') }
+                            onPress={ () => navigation.navigate('Menu', userSystem) }
                         >
                             <RollbackOutlined
                                 style={{ color: '#ffffff', fontSize: 21 }}

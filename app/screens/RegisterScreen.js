@@ -10,9 +10,11 @@ const baseUrl = 'http://localhost:8081';
 export default function App({ route, navigation }) {
 
   const userSystem = route.params;
+  const canChange = userSystem != null ? false : true;
   const [email, setEmail] = React.useState(userSystem != null ? userSystem.email : null);
   const [password, setPassword] = React.useState(userSystem != null ? userSystem.password : null);
   const [userName, setUsername] = React.useState(userSystem != null ? userSystem.userName : null);
+
   const [checked, setChecked] = React.useState('Contributor');
 
   const onSubmitFormHandler = async (event) => {
@@ -55,7 +57,7 @@ export default function App({ route, navigation }) {
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => { userSystem != null ? navigation.navigate('Menu',{ userSystem: userSystem }) : navigation.navigate('Login') }}
+              onPress={() => { userSystem != null ? navigation.navigate('Menu', userSystem ) : navigation.navigate('Login') }}
             >
               <RollbackOutlined
                 style={{ color: '#ffffff', fontSize: 21 }}
@@ -74,7 +76,10 @@ export default function App({ route, navigation }) {
         <Text style={styles.basicText}>
           Email
         </Text>
-        <TextInput style={styles.basicInput} value={email} onChangeText={setEmail} placeholder="Email" />
+        <TextInput style={styles.basicInput} value={email} onChangeText={setEmail} placeholder="Email" 
+          editable={canChange}
+          selectTextOnFocus={canChange}
+        />
         <Text style={styles.basicText}>
           Senha
         </Text>
@@ -82,10 +87,14 @@ export default function App({ route, navigation }) {
         <Text style={styles.basicText}>
           Username do Github
         </Text>
-        <TextInput style={styles.basicInput} value={userName} onChangeText={setUsername} placeholder="Username" />
+        <TextInput style={styles.basicInput} value={userName} onChangeText={setUsername} placeholder="Username" 
+          editable={canChange}
+          selectTextOnFocus={canChange}
+        />
       </View>
       <View style={styles.container}>
         <RadioButton
+          disabled={!canChange}
           value="Contribuidor"
           status={checked === 'Contributor' ? 'checked' : 'unchecked'}
           onPress={() => setChecked('Contributor')}
@@ -94,6 +103,7 @@ export default function App({ route, navigation }) {
           Contribuidor
         </Text>
         <RadioButton
+          disabled={!canChange}
           value="Fundador"
           status={checked === 'Founder' ? 'checked' : 'unchecked'}
           onPress={() => setChecked('Founder')}

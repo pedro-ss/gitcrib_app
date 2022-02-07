@@ -10,15 +10,14 @@ export default function Listagem({ route, navigation }) {
   const [tasks, setTasks] = React.useState([]);
   const projectId = route.params.projectId;
   const userSystem = route.params.userSystem;
-  console.log("Usuário: "+JSON.stringify(userSystem),"Id do projeto: "+projectId);
+  const screenType = route.params.screeType;
+
   let listtasks = [];
 
   const lookForTasks = () => {
     if (projectId != undefined) {
       axios.get(`${baseUrl}/task/projects-tasks/${projectId}`).then((response) => {
         if (response.status == 200) {
-          console.log(` resposta: ${JSON.stringify(response.data)}`);
-          debugger;
           response.data.forEach(taskItem => {
             listtasks.push(
               <Task task={taskItem} userSystem={userSystem} navigation={navigation} />
@@ -32,8 +31,28 @@ export default function Listagem({ route, navigation }) {
     }
   }
 
+  const lookForContributorTasks = () => {
+    ///
+    axios.get(`${baseUrl}/taskcontributor-tasks/${userSystem.id}`).then((response) => {
+      if (response.status == 200) {
+        response.data.forEach(taskItem => {
+          listtasks.push(
+            <Task task={taskItem} userSystem={userSystem} navigation={navigation} />
+          );
+        });
+        setTasks(listtasks);
+      }
+    }).catch((error) => {
+      console.log(`ocorreu um erro ao listar as tasks ${error}`);
+    });
+  }
+
   React.useEffect(() => {
-    lookForTasks();
+    if ( screenType == 'MyTasks') {
+      lookForContributorTasks();
+    } else {
+      lookForTasks();
+    }
   }, []);
 
 
@@ -46,7 +65,7 @@ export default function Listagem({ route, navigation }) {
           <View>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => navigation.navigate('ListarProjetos', userSystem) }
+              onPress={() => navigation.navigate('ListarProjetos', userSystem)}
             >
               <RollbackOutlined
                 style={{ color: '#ffffff', fontSize: 21 }}
@@ -54,18 +73,18 @@ export default function Listagem({ route, navigation }) {
             </TouchableOpacity>
           </View>
         }
-        rightComponent={ userSystem.userType != 'Contributor' ? 
+        rightComponent={userSystem.userType != 'Contributor' ?
           <View>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => navigation.navigate('ManageTask', {userSystem:userSystem, screeType: 'CREATE', projectId: projectId})}
+              onPress={() => navigation.navigate('ManageTask', { userSystem: userSystem, screeType: 'CREATE', projectId: projectId })}
             >
               <PlusOutlined
                 style={{ color: '#ffffff', fontSize: 21 }}
               />
             </TouchableOpacity>
           </View>
-         : ''}
+          : ''}
         centerComponent={{
           text: "TASKS",
           style: styles.headingStyle

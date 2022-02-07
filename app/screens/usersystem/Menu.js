@@ -10,8 +10,13 @@ export default function Menu({ route, navigation }) {
     return (
         <View>
             { userSystem.userType == 'Contributor' ?
-                <View>
-                    <Text>Minhas tasks</Text>
+                <View style={styles.basicButtonsContainer}>
+                    <Button
+                        buttonStyle={styles.basicButtonRegister}
+                        titleStyle={styles.buttonText}
+                        onPress={() => { navigation.navigate('ListTasks', userSystem, { screenType: 'MyTasks' }) }}
+                        title={'Minhas tasks'}
+                    />
                 </View>
                 : ''}
             <View>
