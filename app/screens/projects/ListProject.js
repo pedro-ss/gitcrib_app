@@ -68,7 +68,7 @@ export default function ListProject({ route, navigation }) {
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={ () => navigation.navigate('Login') }
+              onPress={ () => navigation.navigate('Menu', userSystem) }
             >
               <HomeOutlined
                 style={{ color: '#ffffff', fontSize: 21 }}

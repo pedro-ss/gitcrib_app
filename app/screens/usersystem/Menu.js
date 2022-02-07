@@ -1,36 +1,68 @@
 import * as React from 'react';
-import { Text, View, StyleSheet} from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 
-export default function Menu({ userSystem, navigation }) {
-    // adicionar funções com roteamento para as telas correspondentes:
-    // Tela de cafastro com os dados do usuario.
-    // Tela com lista de tasks relacionadas ao Contribuidor logado
-    // Tela de Listagem de projetos
-    // Tela de Login
+export default function Menu({ route, navigation }) {
+    console.log(JSON.stringify(route.params));
+    const userSystem = route.params;
+    const projectTitle = userSystem.userType == 'Fundador' ? 'Meus projetos' : 'Projetos';
 
-    // Tela de cadastro com os dados do usuario.
-    // Tela com lista de projetos relacionadas ao Fundador logado
-    // Tela de Login
     return (
         <View>
             { userSystem.userType == 'Contributor' ?
                 <View>
-                    <Text>Atualizar perfil</Text> 
                     <Text>Minhas tasks</Text>
-                    <Text>Lista de projetos</Text>
-                    <Text>Logout</Text>
                 </View>
-                : <View>
-                    <Text>Atualizar perfil</Text>
-                    <Text>Meus projetos</Text>
-                    <Text>Logout</Text>
+                : ''}
+            <View>
+                <View style={styles.basicButtonsContainer}>
+                    <Button
+                        buttonStyle={styles.basicButtonRegister}
+                        titleStyle={styles.buttonText}
+                        onPress={() => { navigation.navigate('Cadastro', userSystem) }}
+                        title={'Alterar senha'}
+                    />
                 </View>
-            }
+                <View style={styles.basicButtonsContainer}>
+                    <Button
+                        buttonStyle={styles.basicButtonRegister}
+                        titleStyle={styles.buttonText}
+                        onPress={() => { navigation.navigate('ListarProjetos', userSystem) }}
+                        title={projectTitle}
+                    />
+                </View>
+                <View style={styles.basicButtonsContainer}>
+                    <Button
+                        buttonStyle={styles.basicButtonRegister}
+                        titleStyle={styles.buttonText}
+                        onPress={() => { navigation.navigate('Login') }}
+                        title={'Logout'}
+                    />
+                </View>
+            </View>
+
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-
+    basicButtonRegister: {
+        minWidth: 150,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 8,
+        padding: 8,
+        backgroundColor: '#1D075E'
+    },
+    buttonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'white',
+    },
+    basicButtonsContainer: {
+        paddingTop: '10%',
+        flexDirection: "row",
+        justifyContent: 'center',
+        padding: 8,
+    },
 });

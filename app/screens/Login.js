@@ -21,7 +21,8 @@ export default function App({ navigation }) {
     }).then((response) => {
       if(response.status != 500 && response.data != undefined){
         console.log(response.data);
-        navigation.navigate('ListarProjetos', response.data);
+        navigation.navigate('Menu', response.data);
+        //navigation.navigate('ListarProjetos', response.data);
       } else {
         alert("email ou senha incorretos");
       }

@@ -44,40 +44,69 @@ export default function Task({ task, userSystem, navigation }) {
         setTaskEditDelete(false);
     }
 
+    const deleteTask = () => {
+        axios.post(`${baseUrl}/task/delete-task`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*'
+            },
+            taskId: task.taskId,
+            title: task.title,
+            description: task.description,
+            status: task.taskStatus,
+            projectId: task.projectId,
+            founderId: userSystem.id
+        }).then( (response) => {
+            console.log(response.status);
+            alert("Task deletada com sucesso");
+            navigation.goBack(null);
+        }).catch( (error) => {
+            console.log(`Erro ao deletar a task: ${error}`);
+            alert('Erro ao deletar a task.');
+        });
+    }
+
+    const showEditTask = () => {
+        setCheckTask(false);
+        setTaskEditDelete(false);
+        navigation.navigate('ManageTask', { userSystem:userSystem, screenType:'UPDATE', projectId: task.projectId, task: task });
+    }
     return (
-        <View style={styles.containerList}>
+        <View>
             <View style={styles.containerList}>
                 <View style={styles.centeredView}>
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                    >
-                        <View style={styles.basicModalContainer}>
-                            <Text style={styles.taskListHeader}>Deseja atuar nessa task?</Text>
-                        </View>
-                        <View style={styles.basicModalContainer}>
-                            <Text style={styles.taskListText}>{task.description}</Text>
-                        </View>
-                        <View style={styles.basicModalContainer}>
-                            <View style={styles.buttonModalStyle}>
-                                <Button
-                                    buttonStyle={styles.modalButton}
-                                    titleStyle={styles.buttonText}
-                                    onPress={cancelActivity}
-                                    title={'Cancelar'}
-                                />
+                    {userSystem.userType == 'Contributor' ?
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalVisible}
+                        >
+                            <View style={styles.basicModalContainer}>
+                                <Text style={styles.taskListHeader}>Deseja atuar nessa task?</Text>
                             </View>
-                            <View style={styles.buttonModalStyle}>
-                                <Button
-                                    buttonStyle={styles.modalButton}
-                                    titleStyle={styles.buttonText}
-                                    onPress={registerActivity}
-                                    title={'Confirmar'}
-                                />
+                            <View style={styles.basicModalContainer}>
+                                <Text style={styles.taskListText}>{task.description}</Text>
                             </View>
-                        </View>
-                    </Modal>
+                            <View style={styles.basicModalContainer}>
+                                <View style={styles.buttonModalStyle}>
+                                    <Button
+                                        buttonStyle={styles.modalButton}
+                                        titleStyle={styles.buttonText}
+                                        onPress={cancelActivity}
+                                        title={'Cancelar'}
+                                    />
+                                </View>
+                                <View style={styles.buttonModalStyle}>
+                                    <Button
+                                        buttonStyle={styles.modalButton}
+                                        titleStyle={styles.buttonText}
+                                        onPress={registerActivity}
+                                        title={'Confirmar'}
+                                    />
+                                </View>
+                            </View>
+                        </Modal>
+                        : ''}
                 </View>
                 <View style={styles.centeredView}>
                     {userSystem.userType == 'Founder' ?
@@ -86,6 +115,12 @@ export default function Task({ task, userSystem, navigation }) {
                             transparent={true}
                             visible={taskEditDelete}
                         >
+                            <View style={styles.basicModalContainer}>
+                                <Text style={styles.taskListHeader}>O que deseja fazer com a task:</Text>
+                            </View>
+                            <View style={styles.basicModalContainer}>
+                                <Text style={styles.taskListText}>{task.description} ?</Text>
+                            </View>
                             <View style={styles.basicModalContainer}>
                                 <View style={styles.buttonModalStyle}>
                                     <Button
@@ -99,7 +134,7 @@ export default function Task({ task, userSystem, navigation }) {
                                     <Button
                                         buttonStyle={styles.modalButton}
                                         titleStyle={styles.buttonText}
-                                        onPress={() => console.log('deletou')}
+                                        onPress={ deleteTask }
                                         title={'Deletar'}
                                     />
                                 </View>
@@ -107,7 +142,7 @@ export default function Task({ task, userSystem, navigation }) {
                                     <Button
                                         buttonStyle={styles.modalButton}
                                         titleStyle={styles.buttonText}
-                                        onPress={() => console.log('editou')}
+                                        onPress={ showEditTask }
                                         title={'Editar'}
                                     />
                                 </View>
@@ -189,8 +224,7 @@ const styles = StyleSheet.create({
         maxWidth: 100,
         flexDirection: 'column',
         justifyContent: "center",
-        alignItems: "center",
-        paddingTop: '8%'
+        alignItems: "center"
     },
     messageText: {
         color: '#1D075E',

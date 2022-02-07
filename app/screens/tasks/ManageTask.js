@@ -8,12 +8,14 @@ const baseUrl = 'http://localhost:8081';
 
 export default function ManageTask({ route, navigation }) {
 
-    const [title, setTitle] = React.useState(null);
-    const [description, setDescription] = React.useState(null);
-    const [taskStatus, setTaskStatus] = React.useState('ACTIVE');
+    const task = route.params.task;
+    const [title, setTitle] = React.useState(task != undefined ? task.title : null);
+    const [description, setDescription] = React.useState(task != undefined  ? task.description : null);
+    const [taskStatus, setTaskStatus] = React.useState(task != undefined ? task.status : 'ACTIVE');
     const screenType = route.params.screenType;
     const userSystem = route.params.userSystem;
     const projectId = route.params.projectId;
+    console.log(JSON.stringify(route.params));
 
     const createTask = () => {
         if (title == null || description == null) { alert("favor, verificar campos.") }
@@ -31,7 +33,7 @@ export default function ManageTask({ route, navigation }) {
         ).then((response) => {
             if (response.status == 200) {
                 alert("Task cadastrado com sucesso.");
-                navigation.navigate('Login');
+                navigation.navigate('Menu',{ userSystem: userSystem });
             }
         }).catch((error) => {
             console.log("Erro ao cadastrar task");
@@ -41,11 +43,12 @@ export default function ManageTask({ route, navigation }) {
 
     const updateTask = () => {
         if (title == null || description == null) { alert("favor, verificar campos.") }
-        axios.patch(`${baseUrl}/Task/update-Task`, {
+        axios.put(`${baseUrl}/Task/update-Task`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
+            taskId: task.taskId,
             title: title,
             description: description,
             status: taskStatus,
@@ -54,7 +57,7 @@ export default function ManageTask({ route, navigation }) {
         }).then((response) => {
             if (response.status == 204) {
                 alert("Task atualizada com sucesso.");
-                navigation.navigate('ListTasks', { userSystem: userSystem });
+                navigation.navigate('Menu',{ userSystem: userSystem });
             }
         }).catch((error) => {
             console.log("Erro ao atualizar projeto");
@@ -71,7 +74,7 @@ export default function ManageTask({ route, navigation }) {
                     <View>
                         <TouchableOpacity
                             style={{ marginLeft: 10 }}
-                            onPress={() => navigation.goBack(null) }
+                            onPress={() => navigation.navigate('ListTasks',{ projectId: projectId, userSystem: userSystem }) }
                         >
                             <RollbackOutlined
                                 style={{ color: '#ffffff', fontSize: 21 }}
@@ -101,7 +104,7 @@ export default function ManageTask({ route, navigation }) {
                     </Text>
                     <RNPickerSelect
                         value={taskStatus}
-                        onValueChange={(value) => { setTaskStatus(value) }}
+                        onValueChange={(value) =>  setTaskStatus(value) }
                         items={[
                             { label: 'Active', value: 'ACTIVE' },
                             { label: 'Freeze', value: 'FREEZE' },

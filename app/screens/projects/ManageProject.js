@@ -67,7 +67,7 @@ export default function ManageProject({ route, navigation }) {
                     <View>
                         <TouchableOpacity
                             style={{ marginLeft: 10 }}
-                            onPress={() => navigation.goBack(null) }
+                            onPress={ () => navigation.navigate('Menu') }
                         >
                             <RollbackOutlined
                                 style={{ color: '#ffffff', fontSize: 21 }}

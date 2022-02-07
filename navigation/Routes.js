@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Login from '../app/screens/Login';
+import Menu from '../app/screens/usersystem/Menu';
 import ListContributors from '../app/screens/contributors/ListContributors';
 import Listprojects from '../app/screens/projects/ListProject';
 import ListTaks from '../app/screens/tasks/ListTaks';
@@ -27,6 +28,7 @@ export default function Routes() {
         <Stack.Screen name="ListarContributors" component={ListContributors} />
         <Stack.Screen name="ManageProject" component={ManageProject} />
         <Stack.Screen name="ManageTask" component={ManageTask} />
+        <Stack.Screen name="Menu" component={Menu} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -43,10 +43,10 @@ export default function Listagem({ route, navigation }) {
         backgroundColor="#1D075E"
         barStyle="default"
         leftComponent={
-          <View style={styles.headerRight}>
+          <View>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => navigation.goBack(null) }
+              onPress={() => navigation.navigate('ListarProjetos', userSystem) }
             >
               <RollbackOutlined
                 style={{ color: '#ffffff', fontSize: 21 }}
@@ -55,7 +55,7 @@ export default function Listagem({ route, navigation }) {
           </View>
         }
         rightComponent={ userSystem.userType != 'Contributor' ? 
-          <View style={styles.headerRight}>
+          <View>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
               onPress={() => navigation.navigate('ManageTask', {userSystem:userSystem, screeType: 'CREATE', projectId: projectId})}
