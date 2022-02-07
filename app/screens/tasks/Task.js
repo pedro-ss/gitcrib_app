@@ -4,11 +4,15 @@ import { ListItem, Button, CheckBox } from "react-native-elements";
 import axios from 'axios';
 const baseUrl = 'http://localhost:8081';
 
-export default function Task({ task, userSystem, navigation }) {
+export default function Task({ route, navigation }) {
+    console.log(JSON.stringify(route));
     const [modalVisible, setModalVisible] = React.useState(false);
     const [taskEditDelete, setTaskEditDelete] = React.useState(false);
     const [checkTask, setCheckTask] = React.useState(false);
-    console.log(`Task atual: ${JSON.stringify(task)} e usuário: ${JSON.stringify(userSystem)}`);
+    const task = route.task;
+    const userSystem = route.userSystem;
+    const msgModal = (route.screenType == 'MyTasks') ? 'Deseja remover essa task' : 'Deseja atuar nessa task';
+
 
     const registerActivity = () => {
         console.log(`cirou vinculo entre usuario de id: ${userSystem.id} e task: ${task.taskId}`);
@@ -22,7 +26,7 @@ export default function Task({ task, userSystem, navigation }) {
         }).then((response) => {
             console.log("Redirecionando para as tasks do contributor")
             console.log(response)
-            navigation.navigate('Login');
+            navigation.navigate('Menu', { userSystem: userSystem });
         }).catch((error) => {
             alert(`um erro ocorreu ao criar task ${error}`)
         });
@@ -65,6 +69,9 @@ export default function Task({ task, userSystem, navigation }) {
             alert('Erro ao deletar a task.');
         });
     }
+    const removeActivity = () => {
+        setModalVisible(false);
+    }
 
     const showEditTask = () => {
         setCheckTask(false);
@@ -82,7 +89,7 @@ export default function Task({ task, userSystem, navigation }) {
                             visible={modalVisible}
                         >
                             <View style={styles.basicModalContainer}>
-                                <Text style={styles.taskListHeader}>Deseja atuar nessa task?</Text>
+                                <Text style={styles.taskListHeader}>{msgModal}?</Text>
                             </View>
                             <View style={styles.basicModalContainer}>
                                 <Text style={styles.taskListText}>{task.description}</Text>
@@ -96,14 +103,24 @@ export default function Task({ task, userSystem, navigation }) {
                                         title={'Cancelar'}
                                     />
                                 </View>
-                                <View style={styles.buttonModalStyle}>
+                                {route.screenType != 'MyTasks' ?
+                                    <View style={styles.buttonModalStyle}>
+                                        <Button
+                                            buttonStyle={styles.modalButton}
+                                            titleStyle={styles.buttonText}
+                                            onPress={registerActivity}
+                                            title={'Confirmar'}
+                                        />
+                                    </View> 
+                                    : 
+                                    <View style={styles.buttonModalStyle}>
                                     <Button
                                         buttonStyle={styles.modalButton}
                                         titleStyle={styles.buttonText}
-                                        onPress={registerActivity}
+                                        onPress={removeActivity}
                                         title={'Confirmar'}
                                     />
-                                </View>
+                                </View>}
                             </View>
                         </Modal>
                         : ''}
@@ -157,12 +174,12 @@ export default function Task({ task, userSystem, navigation }) {
                     onPress={() => setModalVisible('true')}
                     pad={20}
                 >
-                    { userSystem.userType == 'Founder' ?
+                    {userSystem.userType == 'Founder' ?
                         <CheckBox
                             checked={checkTask}
                             onPress={openOptionsTask}
                         />
-                        : '' }
+                        : ''}
 
                     <ListItem.Content>
                         <ListItem.Title style={styles.taskListHeader}>

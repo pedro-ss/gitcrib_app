@@ -3,8 +3,8 @@ import { Text, View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 
 export default function Menu({ route, navigation }) {
-    console.log(JSON.stringify(route.params));
-    const userSystem = route.params;
+
+    const userSystem = route.params.userSystem;
     const projectTitle = userSystem.userType == 'Fundador' ? 'Meus projetos' : 'Projetos';
 
     return (
@@ -14,7 +14,7 @@ export default function Menu({ route, navigation }) {
                     <Button
                         buttonStyle={styles.basicButtonRegister}
                         titleStyle={styles.buttonText}
-                        onPress={() => { navigation.navigate('ListTasks', userSystem, { screenType: 'MyTasks' }) }}
+                        onPress={() => { navigation.navigate('ListTasks', { screenType: 'MyTasks',userSystem: userSystem})} }
                         title={'Minhas tasks'}
                     />
                 </View>

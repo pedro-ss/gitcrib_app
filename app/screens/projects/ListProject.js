@@ -12,6 +12,7 @@ export default function ListProject({ route, navigation }) {
   const userSystem = route.params;
   let listprojects = [];
   console.log("Usuário atual: "+JSON.stringify(userSystem));
+
   const lookForProjects = () => {
     axios.get(`${baseUrl}/project/list-projects`)
       .then((response) => {
@@ -68,7 +69,7 @@ export default function ListProject({ route, navigation }) {
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={ () => navigation.navigate('Menu', userSystem) }
+              onPress={ () => navigation.navigate('Menu', { userSystem: userSystem } ) }
             >
               <HomeOutlined
                 style={{ color: '#ffffff', fontSize: 21 }}

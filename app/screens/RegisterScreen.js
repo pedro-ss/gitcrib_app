@@ -8,14 +8,14 @@ const baseUrl = 'http://localhost:8081';
 
 
 export default function App({ route, navigation }) {
-
+  console.log("Dados do route: "+JSON.stringify(route.params));
   const userSystem = route.params;
   const canChange = userSystem != null ? false : true;
   const [email, setEmail] = React.useState(userSystem != null ? userSystem.email : null);
   const [password, setPassword] = React.useState(userSystem != null ? userSystem.password : null);
   const [userName, setUsername] = React.useState(userSystem != null ? userSystem.userName : null);
 
-  const [checked, setChecked] = React.useState('Contributor');
+  const [checked, setChecked] = React.useState( userSystem != null && userSystem.userType == 'Contributor' ? 'Contributor' : 'Founder' );
 
   const onSubmitFormHandler = async (event) => {
 
@@ -57,7 +57,7 @@ export default function App({ route, navigation }) {
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => { userSystem != null ? navigation.navigate('Menu', userSystem ) : navigation.navigate('Login') }}
+              onPress={() => { userSystem != null ? navigation.navigate('Menu', { userSystem: userSystem } ) : navigation.navigate('Login') }}
             >
               <RollbackOutlined
                 style={{ color: '#ffffff', fontSize: 21 }}

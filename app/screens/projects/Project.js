@@ -1,6 +1,8 @@
 import React from 'react';
 import { Text, View, TouchableHighlight, StyleSheet, Modal } from 'react-native';
 import { ListItem, CheckBox, Button } from "react-native-elements";
+import axios from 'axios';
+const baseUrl = 'http://localhost:8081';
 
 
 export default function Project({ route, navigation }) {
@@ -21,19 +23,20 @@ export default function Project({ route, navigation }) {
     }
 
     const deleteProject = () => {
+
         axios.post(`${baseUrl}/project/delete-project`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
             projectId: project.projectId,
-            description: description,
-            projectStatus: projectStatus,
+            description: project.description,
+            projectStatus: project.projectStatus,
             founderId: userSystem.id
         }).then((response) => {
             console.log(response.status);
             alert("Task deletada com sucesso");
-            navigation.goBack(null);
+            navigation.navigate('Menu', { userSystem: userSystem } );
         }).catch((error) => {
             console.log(`Erro ao deletar a task: ${error}`);
             alert('Erro ao deletar a task.');
@@ -66,7 +69,7 @@ export default function Project({ route, navigation }) {
                                 <Button
                                     buttonStyle={styles.modalButton}
                                     titleStyle={styles.buttonText}
-                                    onPress={cancelEditProject}
+                                    onPress={ cancelEditProject }
                                     title={'Cancelar'}
                                 />
                             </View>
@@ -74,7 +77,7 @@ export default function Project({ route, navigation }) {
                                 <Button
                                     buttonStyle={styles.modalButton}
                                     titleStyle={styles.buttonText}
-                                    onPress={deleteProject}
+                                    onPress={ deleteProject }
                                     title={'Deletar'}
                                 />
                             </View>

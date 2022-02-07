@@ -21,16 +21,15 @@ export default function ManageProject({ route, navigation }) {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            projectId: project.projectId,
+            projectId: project != undefined ? project.projectId : '',
             description: description,
             projectStatus: projectStatus,
             founderId: userSystem.id
         }
         ).then((response) => {
             if (response.status == 201) {
-                console.log(JSON.stringify(userSystem))
                 alert("Projeto cadastrado com sucesso.");
-                // navigation.navigate('ListarProjetos', userSystem); -> redirecionar para o menu
+                navigation.navigate('Menu', { userSystem: userSystem } );
             }
         }).catch((error) => {
             console.log("Erro ao cadastrar projeto");
@@ -50,7 +49,7 @@ export default function ManageProject({ route, navigation }) {
         }).then((response) => {
             if (response.status == 204) {
                 alert("Projeto atualizado com sucesso.");
-                // navigation.navigate('ListarProjetos', userSystem); -> redirecionar para o menu
+                navigation.navigate('Menu', userSystem);
             }
         }).catch((error) => {
             console.log("Erro ao atualizar projeto");
@@ -67,7 +66,7 @@ export default function ManageProject({ route, navigation }) {
                     <View>
                         <TouchableOpacity
                             style={{ marginLeft: 10 }}
-                            onPress={ () => navigation.navigate('Menu', userSystem) }
+                            onPress={ () => navigation.navigate('Menu', { userSystem: userSystem } ) }
                         >
                             <RollbackOutlined
                                 style={{ color: '#ffffff', fontSize: 21 }}

@@ -6,13 +6,16 @@ import { PlusOutlined, RollbackOutlined } from '@ant-design/icons';
 import axios from 'axios';
 const baseUrl = 'http://localhost:8081';
 
-export default function Listagem({ route, navigation }) {
+export default function ListaTask({ route, navigation }) {
+  
+  console.log(JSON.stringify(route.params));
   const [tasks, setTasks] = React.useState([]);
   const projectId = route.params.projectId;
   const userSystem = route.params.userSystem;
-  const screenType = route.params.screeType;
+  const screenType = route.params.screenType;
 
   let listtasks = [];
+  
 
   const lookForTasks = () => {
     if (projectId != undefined) {
@@ -20,7 +23,7 @@ export default function Listagem({ route, navigation }) {
         if (response.status == 200) {
           response.data.forEach(taskItem => {
             listtasks.push(
-              <Task task={taskItem} userSystem={userSystem} navigation={navigation} />
+              <Task route={{task: taskItem, userSystem: userSystem}} navigation={navigation} />
             );
           });
           setTasks(listtasks);
@@ -32,15 +35,16 @@ export default function Listagem({ route, navigation }) {
   }
 
   const lookForContributorTasks = () => {
-    ///
-    axios.get(`${baseUrl}/taskcontributor-tasks/${userSystem.id}`).then((response) => {
+    axios.get(`${baseUrl}/task/contributor-tasks/${userSystem.id}`).then((response) => {
       if (response.status == 200) {
+        console.log("tasks do contri: "+JSON.stringify(response))
         response.data.forEach(taskItem => {
           listtasks.push(
-            <Task task={taskItem} userSystem={userSystem} navigation={navigation} />
+            <Task route={{task: taskItem, userSystem: userSystem}} navigation={navigation} screenType={screenType} />
           );
         });
         setTasks(listtasks);
+        console.log(JSON.stringify(listtasks));
       }
     }).catch((error) => {
       console.log(`ocorreu um erro ao listar as tasks ${error}`);
@@ -49,8 +53,10 @@ export default function Listagem({ route, navigation }) {
 
   React.useEffect(() => {
     if ( screenType == 'MyTasks') {
+      console.log("MyTasks")
       lookForContributorTasks();
     } else {
+      console.log("other")
       lookForTasks();
     }
   }, []);
@@ -65,7 +71,7 @@ export default function Listagem({ route, navigation }) {
           <View>
             <TouchableOpacity
               style={{ marginLeft: 10 }}
-              onPress={() => navigation.navigate('ListarProjetos', userSystem)}
+              onPress={() => navigation.navigate('Menu', { userSystem: userSystem })}
             >
               <RollbackOutlined
                 style={{ color: '#ffffff', fontSize: 21 }}

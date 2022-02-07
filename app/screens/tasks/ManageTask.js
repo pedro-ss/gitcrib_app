@@ -33,7 +33,7 @@ export default function ManageTask({ route, navigation }) {
         ).then((response) => {
             if (response.status == 200) {
                 alert("Task cadastrado com sucesso.");
-                navigation.navigate('Menu',userSystem );
+                navigation.navigate('Menu', { userSystem: userSystem } );
             }
         }).catch((error) => {
             console.log("Erro ao cadastrar task");
@@ -57,7 +57,7 @@ export default function ManageTask({ route, navigation }) {
         }).then((response) => {
             if (response.status == 204) {
                 alert("Task atualizada com sucesso.");
-                navigation.navigate('Menu',{ userSystem: userSystem });
+                navigation.navigate('Menu', { userSystem: userSystem });
             }
         }).catch((error) => {
             console.log("Erro ao atualizar projeto");
