@@ -19,11 +19,14 @@ export default function App({ navigation }) {
       email: email,
       password: password
     }).then((response) => {
-      if(response.status==200){
-        navigation.navigate('ListarProjetos');
+      if(response.status != 500 && response.data != undefined){
+        console.log(response.data);
+        navigation.navigate('Menu', { userSystem: response.data } );
+      } else {
+        alert("email ou senha incorretos");
       }
     }).catch((error) => {
-      console.log(error);
+      alert("email ou senha incorretos");
     })
   }
   
@@ -65,7 +68,6 @@ export default function App({ navigation }) {
 const styles = StyleSheet.create({
   momContainer: {
     flexDirection: 'column',
-    paddingTop: 100,
     paddingTop: Constants.statusBarHeight,
   },
   container: {

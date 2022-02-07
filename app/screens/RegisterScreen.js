@@ -1,52 +1,85 @@
 import React from 'react';
-import { Text, View, StyleSheet, TextInput } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Button, Header } from 'react-native-elements';
 import { RadioButton } from 'react-native-paper';
+import { RollbackOutlined } from '@ant-design/icons';
 import axios from 'axios';
 const baseUrl = 'http://localhost:8081';
 
 
-export default function App({ navigation }) {
+export default function App({ route, navigation }) {
+  console.log("Dados do route: "+JSON.stringify(route.params));
+  const userSystem = route.params;
+  const canChange = userSystem != null ? false : true;
+  const [email, setEmail] = React.useState(userSystem != null ? userSystem.email : null);
+  const [password, setPassword] = React.useState(userSystem != null ? userSystem.password : null);
+  const [userName, setUsername] = React.useState(userSystem != null ? userSystem.userName : null);
 
-  const [email, setEmail] = React.useState(null);
-  const [password, setPassword] = React.useState(null);
-  const [userName, setUsername] = React.useState(null);
-  const [checked, setChecked] = React.useState('Contributor');
+  const [checked, setChecked] = React.useState( userSystem != null && userSystem.userType == 'Contributor' ? 'Contributor' : 'Founder' );
 
   const onSubmitFormHandler = async (event) => {
-      
-      console.log(email, userName, password, checked);
-      
-      axios.post(`${baseUrl}/user`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
-        userName: userName,
-        userType: checked,
-        email: email,
-        password: password
-      }).then((response) => {
-        console.log(response);
-        if(response.status==201){
-          setChecked('Contributor');
-          setEmail('')
-          setPassword('')
-          setUsername('')
-          navigation.navigate('Login')
-        }
-      }).catch((error) => {
-        console.log(error)
-      });
+
+    console.log(email, userName, password, checked);
+    if (email == null || userName == null || password == null) {
+      alert("Erro ao cadastrar, verifique os campos preenchidos.");
+    }
+
+    axios.post(`${baseUrl}/user`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      userName: userName,
+      userType: checked,
+      email: email,
+      password: password
+    }).then((response) => {
+      console.log(response);
+      if (response.status == 201) {
+        setChecked('Contributor');
+        setEmail('')
+        setPassword('')
+        setUsername('')
+        navigation.navigate('Login')
+      }
+    }).catch((error) => {
+      console.log(error);
+      alert("Erro ao cadastrar, verifique os campos preenchidos.");
+    });
   }
 
   return (
     <View >
+      <Header
+        backgroundColor="#1D075E"
+        barStyle="default"
+        leftComponent={
+          <View style={styles.headerRight}>
+            <TouchableOpacity
+              style={{ marginLeft: 10 }}
+              onPress={() => { userSystem != null ? navigation.navigate('Menu', { userSystem: userSystem } ) : navigation.navigate('Login') }}
+            >
+              <RollbackOutlined
+                style={{ color: '#ffffff', fontSize: 21 }}
+              />
+            </TouchableOpacity>
+          </View>
+        }
+        centerComponent={{
+          text: "CADASTRO",
+          style: styles.headingStyle
+        }}
+        containerStyle={{ width: 'auto' }}
+        placement="center"
+      />
       <View style={styles.containerSecond}>
         <Text style={styles.basicText}>
           Email
         </Text>
-        <TextInput style={styles.basicInput} value={email} onChangeText={setEmail} placeholder="Email" />
+        <TextInput style={styles.basicInput} value={email} onChangeText={setEmail} placeholder="Email" 
+          editable={canChange}
+          selectTextOnFocus={canChange}
+        />
         <Text style={styles.basicText}>
           Senha
         </Text>
@@ -54,10 +87,14 @@ export default function App({ navigation }) {
         <Text style={styles.basicText}>
           Username do Github
         </Text>
-        <TextInput style={styles.basicInput} value={userName} onChangeText={setUsername} placeholder="Username" />
+        <TextInput style={styles.basicInput} value={userName} onChangeText={setUsername} placeholder="Username" 
+          editable={canChange}
+          selectTextOnFocus={canChange}
+        />
       </View>
       <View style={styles.container}>
         <RadioButton
+          disabled={!canChange}
           value="Contribuidor"
           status={checked === 'Contributor' ? 'checked' : 'unchecked'}
           onPress={() => setChecked('Contributor')}
@@ -66,6 +103,7 @@ export default function App({ navigation }) {
           Contribuidor
         </Text>
         <RadioButton
+          disabled={!canChange}
           value="Fundador"
           status={checked === 'Founder' ? 'checked' : 'unchecked'}
           onPress={() => setChecked('Founder')}
@@ -155,5 +193,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingTop: 10,
     color: '#1D075E'
+  },
+  headingStyle: {
+    paddingTop: '3%',
+    color: "#ffffff",
+    fontSize: 17,
+    fontWeight: 'bold',
   },
 });
